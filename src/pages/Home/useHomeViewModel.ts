@@ -53,23 +53,28 @@ export const useHomeViewModel = () => {
   };
 
   const saveFavourite = useCallback(async (movie: Movie) => {
+    if (!user?.uid) {
+      navigate('/auth');
+      return;
+    }
+
     try {
-      await saveFavouriteMovie(movie);
+      await saveFavouriteMovie(user.uid, movie);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save favourite movie.');
     }
-  }, []);
+  }, [navigate, user?.uid]);
 
   const handleFavouriteClick = useCallback(
     async (movie: Movie) => {
-      if (!user) {
+      if (!user?.uid) {
         navigate('/auth');
         return;
       }
 
-      await saveFavourite(movie);
+      await saveFavouriteMovie(user.uid, movie);
     },
-    [navigate, saveFavourite, user],
+    [navigate, user?.uid],
   );
 
   return {

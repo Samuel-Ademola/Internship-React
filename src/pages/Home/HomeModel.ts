@@ -72,3 +72,5 @@ export async function initialMovies(): Promise<Movie[]> {
 
   return uniqueMovies;
 }
+
+export type { HomeModel };
