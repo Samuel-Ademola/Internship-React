@@ -22,6 +22,7 @@ function App() {
     handleSearch,
     loadInitialMovies,
     handleFavouriteClick,
+    streamingProviders,
   } = useHomeViewModel();
 
   useEffect(() => {
@@ -56,6 +57,7 @@ function App() {
                   loading={loading}
                   error={error}
                   onFavouriteClick={handleFavouriteClick}
+                  streamingProviders={streamingProviders}
                 />
               }
             />

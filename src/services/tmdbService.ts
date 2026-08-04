@@ -22,10 +22,10 @@ interface WatchProviderResponse {
 
 export async function getStreamingProviders(
   tmdbMovieId: number,
-  country = "US"
+  country = "NG"
 ): Promise<StreamingProvider[]> {
   const response = await fetch(
-    `${TMDB_BASE_URL}/movie/${tmdbMovieId}/watch/providers?api_key=${tmdbApiKey}`
+    `${TMDB_BASE_URL}/movie/${tmdbMovieId}/watch/providers?api_key=${tmdbApiKey}&watch_region=${country}`
   );
 
   if (!response.ok) {
@@ -33,6 +33,7 @@ export async function getStreamingProviders(
   }
 
   const data: WatchProviderResponse = await response.json();
+  console.log("TMDb provider response:", data);
 
   const providers =
     data.results?.[country]?.flatrate ??
@@ -56,5 +57,7 @@ export async function findTMDbMovieId(
 
   const data = await response.json();
 
-  return data.movie_results?.[0]?.id ?? null;
+console.log("TMDb find response:", data);
+
+return data.movie_results?.[0]?.id ?? null;
 }
