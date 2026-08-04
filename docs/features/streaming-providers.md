@@ -2,69 +2,220 @@
 
 ## Goal
 
-Allow users to see available streaming platforms for a selected movie.
+Allow users to see legitimate streaming platforms where a selected movie is available.
 
 ## User Story
 
-As a user,
+As a user,  
+I want to see available streaming providers for a movie,  
+so that I can quickly find where I can watch it legally.
 
-I want to see where a movie is available to watch,
+---
 
-so that I can choose a streaming platform without searching manually.
+# Feature Overview
 
-## Feature Overview
+The Streaming Providers feature integrates with the TMDb Watch Providers API to retrieve available streaming platforms for movies.
 
-The Streaming Providers feature improves the Watch Now experience by displaying available streaming services for movies.
+The feature extends the existing movie application by displaying providers such as:
+
+- Amazon Prime Video
+- Netflix
+- Disney+
+- Other supported platforms
+
+Availability depends on region and current provider licensing.
+
+---
+
+# Implementation
+
+The feature flow:
+
+```text
+User searches movie
+        |
+        ↓
+OMDb returns movie data
+        |
+        ↓
+Movie IMDb ID sent to TMDb
+        |
+        ↓
+TMDb finds matching movie
+        |
+        ↓
+Watch Providers API request
+        |
+        ↓
+Streaming providers displayed on movie card
+```
+
+---
+
+# Technical Changes
+
+## Added Files
+
+```text
+src/services/tmdbService.ts
+src/types/streaming.ts
+src/components/StreamingProviders/StreamingProviders.tsx
+```
+
+---
+
+## Modified Files
+
+```text
+src/App.tsx
+src/pages/Home/HomeView.tsx
+src/pages/Home/useHomeViewModel.ts
+src/components/MovieCard/MovieCard.tsx
+```
+
+---
+
+# TMDb Integration
+
+A TMDb API configuration was added using an environment variable:
+
+```text
+VITE_TMDB_API_KEY
+```
+
+The application uses the TMDb Watch Providers endpoint:
+
+```text
+/movie/{movie_id}/watch/providers
+```
+
+to retrieve available streaming services.
+
+---
+
+# Provider Loading Process
+
+When movies are loaded:
+
+1. The application receives movie information from OMDb.
+2. The movie IMDb ID is used to search TMDb for the matching movie.
+3. The TMDb movie ID is retrieved.
+4. The Watch Providers API is called.
+5. Provider information is stored in React state.
+6. Available streaming platforms are displayed on the movie card.
+
+---
+
+# Region Handling
+
+Streaming availability depends on the selected country because licensing differs between regions.
+
+Current default region:
+
+```text
+US (United States)
+```
+
+The API supports changing the region code for different markets.
 
 Examples:
 
-- Netflix
-- Amazon Prime Video
-- Disney+
-- Apple TV
-- Hulu
+```text
+United States → US
+Nigeria → NG
+United Kingdom → GB
+```
 
-## MVP
+Future improvements can include automatic user location detection.
 
-For the first version:
+---
 
-- Add a streaming providers section to movie details.
-- Fetch provider information from an external movie API.
+# Streaming Provider Component
+
+A reusable component was created:
+
+```text
+src/components/StreamingProviders/StreamingProviders.tsx
+```
+
+Responsibilities:
+
+- Receive provider data as props.
 - Display available streaming platforms.
-- Keep Watch Now functionality working.
+- Handle cases where no providers are available.
 
-## Technical Approach
+---
 
-Possible API:
+# Testing
 
-- TMDb API
+The feature was tested locally.
 
-Required data:
+Testing results:
 
-- Movie ID
-- Country/region
-- Streaming provider information
+- Movie search works correctly.
+- TMDb movie lookup works correctly.
+- Streaming provider requests succeed.
+- Providers display when available.
+- Movies without provider information show a fallback message.
+- Existing Favourite functionality continues to work.
+- Production build completes successfully.
 
-## Implementation Plan
+Build command:
 
-1. Add TMDb API integration.
-2. Create streaming provider service.
-3. Add provider model/types.
-4. Display providers in UI.
-5. Add loading and error states.
-6. Test with multiple movies.
+```bash
+npm run build
+```
 
-## Future Improvements
+---
 
-- Detect user's country automatically.
-- Add provider logos.
-- Add direct provider links.
-- Allow filtering by subscription service.
+# Known Limitations
 
-## Acceptance Criteria
+Some movies may display:
 
-- Users can see streaming providers.
-- Provider information loads correctly.
-- Existing Favourite feature still works.
-- Existing Watch Now feature still works.
-- Production build succeeds.
+```text
+No streaming providers available
+```
+
+This does not always indicate an application error.
+
+Possible reasons:
+
+- The movie is not available on streaming platforms in the selected region.
+- Streaming licenses change over time.
+- TMDb does not have provider information for that movie.
+
+---
+
+# Future Improvements
+
+Possible improvements include:
+
+- Add automatic user country detection.
+- Add multiple region fallback.
+- Add direct links to streaming provider pages.
+- Replace Watch Now search with direct provider navigation.
+- Add provider logos and improved UI design.
+- Cache provider results to reduce API requests.
+
+---
+
+# Development Notes
+
+The Streaming Providers feature was developed using a feature branch workflow.
+
+Branch:
+
+```text
+feature/streaming-providers
+```
+
+Development process:
+
+1. Created a dedicated feature branch.
+2. Added TMDb API configuration.
+3. Created streaming provider service.
+4. Added provider types.
+5. Built reusable provider component.
+6. Integrated providers into movie cards.
+7. Tested production build.
+8. Documented the feature.
