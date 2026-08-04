@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Header from './components/Header';
 import Breadcrumbs from './components/Breadcrumbs';
 import Footer from './components/Footer';
@@ -75,6 +76,7 @@ function App() {
         )}
       </main>
       <Footer />
+      <Analytics />
     </div>
   );
 }
