@@ -12,6 +12,7 @@ This project is a React + Vite application that integrates with OMDb and Firebas
 - Breadcrumb navigation for route context
 - Responsive modern UI with header and footer layout
 - MVVM-style page and service separation
+- Watch Now integration using JustWatch search
 
 ## Prompts Used for This App
 
