@@ -1,0 +1,47 @@
+const TMDB_BASE_URL = "https://api.themoviedb.org/3";
+
+const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY;
+
+if (!tmdbApiKey) {
+  throw new Error(
+    "Missing TMDb API key. Set VITE_TMDB_API_KEY in your environment."
+  );
+}
+
+export interface StreamingProvider {
+  provider_name: string;
+  logo_path: string | null;
+}
+
+interface WatchProviderResponse {
+  results?: {
+    [country: string]: {
+      flatrate?: StreamingProvider[];
+      rent?: StreamingProvider[];
+      buy?: StreamingProvider[];
+    };
+  };
+}
+
+export async function getStreamingProviders(
+  tmdbMovieId: number,
+  country = "US"
+): Promise<StreamingProvider[]> {
+  const response = await fetch(
+    `${TMDB_BASE_URL}/movie/${tmdbMovieId}/watch/providers?api_key=${tmdbApiKey}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch streaming providers.");
+  }
+
+  const data: WatchProviderResponse = await response.json();
+
+  const providers =
+    data.results?.[country]?.flatrate ??
+    data.results?.[country]?.rent ??
+    data.results?.[country]?.buy ??
+    [];
+
+  return providers;
+}
