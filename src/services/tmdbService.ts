@@ -45,3 +45,19 @@ export async function getStreamingProviders(
 
   return providers;
 }
+
+export async function findTMDbMovieId(
+  imdbId: string
+): Promise<number | null> {
+  const response = await fetch(
+    `${TMDB_BASE_URL}/find/${imdbId}?api_key=${tmdbApiKey}&external_source=imdb_id`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to find TMDb movie.");
+  }
+
+  const data = await response.json();
+
+  return data.movie_results?.[0]?.id ?? null;
+}
