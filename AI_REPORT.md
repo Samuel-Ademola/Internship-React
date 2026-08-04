@@ -167,6 +167,33 @@ Purpose:
 Used to establish the initial project structure.
 
 ---
+## 5. Streaming Providers
+
+The application was extended with TMDb Watch Providers integration.
+
+Implemented:
+
+- TMDb API configuration.
+- Movie lookup using IMDb IDs.
+- Streaming provider retrieval.
+- Provider display component.
+- Region-based provider availability.
+
+AI assistance was used for:
+
+- Designing the integration flow.
+- Debugging TypeScript issues.
+- Reviewing component structure.
+- Improving documentation.
+
+Manual improvements included:
+
+- Adjusting state management.
+- Fixing API integration issues.
+- Testing provider availability.
+- Maintaining existing Favourite functionality.
+
+---
 
 ## MVVM Architecture
 
