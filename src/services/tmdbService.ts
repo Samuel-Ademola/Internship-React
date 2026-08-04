@@ -8,10 +8,7 @@ if (!tmdbApiKey) {
   );
 }
 
-export interface StreamingProvider {
-  provider_name: string;
-  logo_path: string | null;
-}
+import type { StreamingProvider } from "../types/streaming";
 
 interface WatchProviderResponse {
   results?: {
