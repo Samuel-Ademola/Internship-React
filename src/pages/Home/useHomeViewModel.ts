@@ -4,11 +4,16 @@ import { useAuth } from '../../context/AuthContext';
 import { createHomeModel, getMovies, initialMovies, type HomeModel } from './HomeModel';
 import { saveFavourite as saveFavouriteMovie } from '../Favourites/FavouritesModel';
 import type { Movie } from '../../services/omdbMovieService';
+import { findTMDbMovieId, getStreamingProviders } from '../../services/tmdbService';
+import type { StreamingProvider } from '../../types/streaming';
 
 export const useHomeViewModel = () => {
   const [model] = useState<HomeModel>(() => createHomeModel());
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [streamingProviders, setStreamingProviders] = useState<
+  Record<string, StreamingProvider[]>
+>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasLoadedInitialMovies, setHasLoadedInitialMovies] = useState(false);
@@ -37,6 +42,7 @@ export const useHomeViewModel = () => {
     }
   }, [hasLoadedInitialMovies, loadInitialMovies]);
 
+  
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
@@ -77,6 +83,51 @@ export const useHomeViewModel = () => {
     [navigate, user?.uid],
   );
 
+  const loadStreamingProviders = useCallback(async (movie: Movie) => {
+    console.log("Loading providers for:", movie.Title);
+  if (!movie.imdbID) {
+    return;
+  }
+
+  try {
+    const tmdbMovieId = await findTMDbMovieId(movie.imdbID);
+
+    if (!tmdbMovieId) {
+      return;
+    }
+    console.log(
+  "TMDb ID for",
+  movie.Title,
+  ":",
+  tmdbMovieId
+);
+
+    const providers = await getStreamingProviders(tmdbMovieId);
+
+    setStreamingProviders((previous) => ({
+      ...previous,
+      [movie.imdbID]: providers,
+    }));
+  } catch (err) {
+    console.error(
+      'Failed to load streaming providers:',
+      err
+    );
+  }
+}, []);
+
+ useEffect(() => {
+  if (!movies.length) {
+    return;
+  }
+
+  movies.forEach((movie) => {
+    if (!streamingProviders[movie.imdbID]) {
+      void loadStreamingProviders(movie);
+    }
+  });
+}, [movies, streamingProviders, loadStreamingProviders]);
+
   return {
     model,
     query,
@@ -87,5 +138,7 @@ export const useHomeViewModel = () => {
     handleSearch,
     loadInitialMovies,
     handleFavouriteClick,
+    loadStreamingProviders,
+    streamingProviders,
   };
 };
