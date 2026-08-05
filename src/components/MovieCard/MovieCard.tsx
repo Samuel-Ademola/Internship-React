@@ -14,13 +14,23 @@ function MovieCard({
   providers = [],
 }: MovieCardProps) {
   const handleWatchNow = () => {
-    const query = encodeURIComponent(`${movie.title} watch online`);
+  if (providers.length > 0) {
+    const provider = providers[0];
+
+    const providerSearch = encodeURIComponent(
+      `${provider.provider_name} ${movie.title}`
+    );
 
     window.open(
-      `https://www.google.com/search?q=${query}`,
+      `https://www.google.com/search?q=${providerSearch}`,
       "_blank"
     );
-  };
+
+    return;
+  }
+
+  alert("No streaming provider available for this movie.");
+};
 
   return (
     <li className="movie-card">

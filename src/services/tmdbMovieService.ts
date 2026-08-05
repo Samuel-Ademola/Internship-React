@@ -31,12 +31,11 @@ export async function searchMovies(query: string): Promise<Movie[]> {
 
 export async function getPopularMovies(): Promise<Movie[]> {
   const today = new Date();
-
   const currentDate = today.toISOString().split("T")[0];
 
   const response = await fetch(
-  `${TMDB_BASE_URL}/discover/movie?api_key=${tmdbApiKey}&sort_by=popularity.desc&vote_count.gte=100&language=en-US`
-);
+    `${TMDB_BASE_URL}/discover/movie?api_key=${tmdbApiKey}&sort_by=popularity.desc&primary_release_date.lte=${currentDate}&primary_release_date.gte=2024-01-01&vote_count.gte=100&language=en-US`
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch popular movies.");
@@ -45,6 +44,8 @@ export async function getPopularMovies(): Promise<Movie[]> {
   const data = await response.json();
 
   return (data.results ?? []).filter(
-  (movie: Movie) => movie.poster_path && movie.release_date
-);
+    (movie: Movie) =>
+      movie.poster_path &&
+      movie.release_date
+  );
 }

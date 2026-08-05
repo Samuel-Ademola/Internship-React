@@ -13,6 +13,7 @@ import type { StreamingProvider } from "../types/streaming";
 interface WatchProviderResponse {
   results?: {
     [country: string]: {
+      link?: string;
       flatrate?: StreamingProvider[];
       rent?: StreamingProvider[];
       buy?: StreamingProvider[];
