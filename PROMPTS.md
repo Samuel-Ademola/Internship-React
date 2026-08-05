@@ -1,59 +1,208 @@
-# AI Prompts Used During Development
-
-This document contains the main prompts used while developing the React application with AI assistance.
+# AI Development Prompts Used
 
 ## Project Setup and Architecture
 
-1. Create a React + Vite application structure suitable for a movie search application.
+### Prompt
 
-2. Add a clean MVVM-inspired architecture separating views, view models, components, and services.
+```
+Create a React + Vite application structure using TypeScript.
+Organize the project using clean folders and reusable components.
+Use a maintainable architecture suitable for a beginner developer.
+```
 
-3. Organize the project folders to improve maintainability and scalability.
+### Purpose
 
-## Movie Search Feature
+Used to establish the initial React project structure, component organization, and development approach.
 
-4. Integrate the OMDb API for movie searching.
+---
 
-5. Use `import.meta.env.VITE_OMDB_API_KEY` to securely access the API key.
+# Application Architecture (MVVM)
 
-6. Create a reusable movie service for handling API requests.
+### Prompt
 
-## Authentication
+```
+Help me structure this React application using MVVM architecture.
+Separate models, views, and view models while keeping the code beginner-friendly and maintainable.
+```
 
-7. Add Firebase Authentication to the React application.
+### Purpose
 
-8. Create authentication service wrappers for login, logout, and user state management.
+Used to improve separation of responsibilities between UI components, business logic, and data handling.
 
-9. Create an authentication context to provide user information throughout the application.
+---
 
-10. Add protected routes that prevent unauthenticated users from accessing favourites.
+# Movie API Integration
 
-## Favourites Feature
+### Prompt
 
-11. Create a Firebase Firestore service for storing user favourites.
+```
+Integrate movie search functionality using an API in a React TypeScript application.
+Use environment variables for API keys and create reusable service functions.
+```
 
-12. Store favourites under each authenticated user's profile.
+### Purpose
 
-13. Allow users to add and remove favourite movies.
+Used to implement movie data fetching and API service organization.
 
-14. Create a dedicated favourites page with its own view model.
+---
 
-## User Interface Improvements
+# Migrating from OMDb to TMDB
 
-15. Improve the styling of the login page and movie cards.
+### Prompt
 
-16. Create a responsive header with navigation and search functionality.
+```
+Help me migrate my React movie application from OMDb API to TMDB API.
+Keep existing features working and update the service layer without breaking components.
+```
 
-17. Add a profile page and login button.
+### Purpose
 
-18. Add breadcrumb navigation to show route context.
+Used when replacing the original movie data source with TMDB.
 
-19. Add a footer and improve overall page layout.
+---
 
-## Debugging and Documentation
+# Firebase Authentication
 
-20. Help debug React errors and improve application reliability.
+### Prompt
 
-21. Review the code structure and suggest refactoring improvements.
+```
+Create Firebase authentication services for a React TypeScript application.
+Implement signup, login, logout, and authentication state management using context.
+```
 
-22. Improve the README documentation with setup instructions and project details.
+### Purpose
+
+Used to add user authentication functionality.
+
+---
+
+# Favourite Movies Feature
+
+### Prompt
+
+```
+Implement a favourites system using Firebase Firestore.
+Each authenticated user should have their own favourite movies collection.
+Protect the favourites page for logged-in users only.
+```
+
+### Purpose
+
+Used to build user-specific favourite movie storage.
+
+---
+
+# Streaming Providers Integration
+
+### Prompt
+
+```
+Add TMDB Watch Providers support to the React movie application.
+Retrieve available streaming services for movies and display providers in the UI.
+```
+
+### Purpose
+
+Used to implement streaming availability information.
+
+---
+
+# Watch Now Feature
+
+### Prompt
+
+```
+Create a Watch Now button for movie cards.
+When clicked, open a legal streaming search page using the selected movie title.
+```
+
+### Purpose
+
+Used to create a user-friendly way to find where movies can be watched.
+
+---
+
+# UI Improvements
+
+### Prompt
+
+```
+Improve the React application UI.
+Create a responsive modern layout with better movie cards, spacing, header, footer, and navigation components.
+```
+
+### Purpose
+
+Used to improve the application's appearance and usability.
+
+---
+
+# Debugging TypeScript Errors
+
+### Prompt
+
+```
+Review these TypeScript errors and explain the cause.
+Provide fixes while keeping the existing application structure.
+```
+
+### Purpose
+
+Used for debugging compilation errors, incorrect imports, and type mismatches.
+
+---
+
+# API and Deployment Debugging
+
+### Prompt
+
+```
+My React application works locally but fails after deployment.
+Help me debug environment variables, API configuration, and production issues.
+```
+
+### Purpose
+
+Used to resolve Vercel deployment issues caused by missing environment variables.
+
+---
+
+# Git Workflow Guidance
+
+### Prompt
+
+```
+Guide me through using Git feature branches, pull requests, merging, and keeping the main branch clean.
+```
+
+### Purpose
+
+Used to follow a professional development workflow.
+
+---
+
+# Documentation Generation
+
+### Prompt
+
+```
+Help me create technical documentation explaining:
+- features implemented
+- AI assistance
+- development workflow
+- manual improvements made after reviewing AI suggestions
+```
+
+### Purpose
+
+Used to prepare project documentation required for submission.
+
+---
+
+# Reflection
+
+AI was used as a development assistant throughout the project.
+
+Prompts were used for planning, debugging, architecture decisions, documentation, and implementation guidance.
+
+All generated suggestions were reviewed, tested, and manually adjusted before being included in the final application.
