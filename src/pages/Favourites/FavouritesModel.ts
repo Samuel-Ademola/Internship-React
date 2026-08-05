@@ -1,4 +1,4 @@
-import type { Movie } from '../../services/omdbMovieService';
+import type { Movie } from '../../services/tmdbMovieService';
 import { addFavourite, getFavourites, removeFavourite } from '../../services/firebaseService';
 import type { FavouritesModel } from '../../types/favourites';
 

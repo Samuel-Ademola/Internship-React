@@ -3,17 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { createHomeModel, getMovies, initialMovies, type HomeModel } from './HomeModel';
 import { saveFavourite as saveFavouriteMovie } from '../Favourites/FavouritesModel';
-import type { Movie } from '../../services/omdbMovieService';
-import { findTMDbMovieId, getStreamingProviders } from '../../services/tmdbService';
-import type { StreamingProvider } from '../../types/streaming';
+import type { Movie } from '../../services/tmdbMovieService';
+import { getStreamingProvidersWithFallback, type StreamingAvailability, } from "../../services/tmdbService";
 
 export const useHomeViewModel = () => {
   const [model] = useState<HomeModel>(() => createHomeModel());
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [streamingProviders, setStreamingProviders] = useState<
-  Record<string, StreamingProvider[]>
+  Record<string, StreamingAvailability>
 >({});
+const [loadedProviderMovies, setLoadedProviderMovies] =
+  useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasLoadedInitialMovies, setHasLoadedInitialMovies] = useState(false);
@@ -84,33 +85,20 @@ export const useHomeViewModel = () => {
   );
 
   const loadStreamingProviders = useCallback(async (movie: Movie) => {
-    console.log("Loading providers for:", movie.Title);
-  if (!movie.imdbID) {
-    return;
-  }
+  console.log("Loading providers for:", movie.title);
 
   try {
-    const tmdbMovieId = await findTMDbMovieId(movie.imdbID);
+    const availability =
+  await getStreamingProvidersWithFallback(movie.id);
 
-    if (!tmdbMovieId) {
-      return;
-    }
-    console.log(
-  "TMDb ID for",
-  movie.Title,
-  ":",
-  tmdbMovieId
-);
+setStreamingProviders((previous) => ({
+  ...previous,
+  [String(movie.id)]: availability,
+}));
 
-    const providers = await getStreamingProviders(tmdbMovieId);
-
-    setStreamingProviders((previous) => ({
-      ...previous,
-      [movie.imdbID]: providers,
-    }));
   } catch (err) {
     console.error(
-      'Failed to load streaming providers:',
+      "Failed to load streaming providers:",
       err
     );
   }
@@ -122,11 +110,19 @@ export const useHomeViewModel = () => {
   }
 
   movies.forEach((movie) => {
-    if (!streamingProviders[movie.imdbID]) {
+    if (!loadedProviderMovies.has(movie.id)) {
+      setLoadedProviderMovies((previous) => {
+        const updated = new Set(previous);
+        updated.add(movie.id);
+        return updated;
+      });
+
       void loadStreamingProviders(movie);
     }
   });
-}, [movies, streamingProviders, loadStreamingProviders]);
+}, [movies, loadedProviderMovies, loadStreamingProviders]);
+
+
 
   return {
     model,

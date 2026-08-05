@@ -1,13 +1,13 @@
 import MovieCard from '../../components/MovieCard/MovieCard';
-import type { Movie } from '../../services/omdbMovieService';
-import type { StreamingProvider } from '../../types/streaming';
+import type { Movie } from '../../services/tmdbMovieService';
+import type { StreamingAvailability } from "../../services/tmdbService";
 
 interface HomeViewProps {
   movies: Movie[];
   loading: boolean;
-  error: string | null;
+  error: string |null;
   onFavouriteClick: (movie: Movie) => void;
-  streamingProviders: Record<string, StreamingProvider[]>;
+  streamingProviders: Record<string, StreamingAvailability>;
 }
 
 export function HomeView({
@@ -21,14 +21,14 @@ export function HomeView({
     <section className="page-shell">
       <div className="page-header">
         <div>
-          <p className="page-eyebrow">Search the catalog</p>
+          <p className="page-eyebrow">Latest releases</p>
 
           <h1 className="page-title">
             Discover your next favourite movie
           </h1>
 
           <p className="page-copy">
-            Browse the OMDb collection, save favourites, and find where movies are available to stream.
+            Browse the TMDB collection, save favourites, and find where movies are available to stream.
           </p>
         </div>
       </div>
@@ -48,11 +48,16 @@ export function HomeView({
       <ul className="movie-grid">
         {movies.map((movie) => (
           <MovieCard
-            key={movie.imdbID}
-            movie={movie}
-            onFavouriteClick={() => onFavouriteClick(movie)}
-            providers={streamingProviders[movie.imdbID] || []}
-          />
+  key={movie.id}
+  movie={movie}
+  onFavouriteClick={() => onFavouriteClick(movie)}
+  providers={
+    streamingProviders[String(movie.id)]?.providers ?? []
+  }
+  watchLink={
+    streamingProviders[String(movie.id)]?.link
+  }
+/>
         ))}
       </ul>
     </section>

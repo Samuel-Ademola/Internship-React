@@ -1,5 +1,6 @@
 import MovieCard from '../../components/MovieCard/MovieCard';
 import { useFavouritesViewModel } from './useFavouritesViewModel';
+import type { Movie } from '../../services/tmdbMovieService';
 
 export function FavouritesView() {
   const { model, favourites, loading, error, removeMovie } = useFavouritesViewModel();
@@ -22,12 +23,12 @@ export function FavouritesView() {
 
       <div className="favourites-list">
         {favourites.map((movie) => (
-          <article key={movie.imdbID} className="favourites-item">
+          <article key={movie.id} className="favourites-item">
             <MovieCard movie={movie} />
             <button
               className="favourites-item__remove"
               type="button"
-              onClick={() => void removeMovie(movie.imdbID)}
+              onClick={() => void removeMovie(String(movie.id))}
             >
               Remove
             </button>

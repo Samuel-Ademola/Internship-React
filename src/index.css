@@ -669,3 +669,88 @@ body {
     font-size: 1.75rem;
   }
 }
+
+/* Streaming Providers */
+
+.streaming-providers {
+  margin-top: 1rem;
+}
+
+.streaming-providers h4 {
+  margin: 0 0 0.6rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.streaming-providers__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.streaming-provider {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #111827;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.streaming-provider:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.streaming-provider[href*="netflix"]:hover {
+  background: #E50914;
+  border-color: #E50914;
+  color: white;
+}
+
+.streaming-provider[href*="primevideo"]:hover {
+  background: #00A8E1;
+  border-color: #00A8E1;
+  color: white;
+}
+
+.streaming-provider[href*="disney"]:hover {
+  background: #113CCF;
+  border-color: #113CCF;
+  color: white;
+}
+
+.streaming-provider[href*="tv.apple"]:hover {
+  background: black;
+  border-color: black;
+  color: white;
+}
+
+.streaming-provider[href*="youtube"]:hover {
+  background: #FF0000;
+  border-color: #FF0000;
+  color: white;
+}
+
+.streaming-provider img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+}
+
+.streaming-provider span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.streaming-providers__empty {
+  margin-top: 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-style: italic;
+}

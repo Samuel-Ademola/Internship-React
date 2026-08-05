@@ -2,13 +2,17 @@ import type { StreamingProvider } from "../../types/streaming";
 
 interface StreamingProvidersProps {
   providers: StreamingProvider[];
+  watchLink?: string;
 }
 
-function StreamingProviders({ providers }: StreamingProvidersProps) {
+function StreamingProviders({
+  providers,
+  watchLink,
+}: StreamingProvidersProps) {
   if (!providers.length) {
     return (
       <p className="streaming-providers__empty">
-        No streaming providers available.
+        Streaming availability not found
       </p>
     );
   }
@@ -19,8 +23,11 @@ function StreamingProviders({ providers }: StreamingProvidersProps) {
 
       <div className="streaming-providers__list">
         {providers.map((provider) => (
-          <div
-            key={provider.provider_name}
+          <a
+            key={provider.provider_id}
+            href={watchLink}
+            target="_blank"
+            rel="noopener noreferrer"
             className="streaming-provider"
           >
             {provider.logo_path && (
@@ -31,7 +38,7 @@ function StreamingProviders({ providers }: StreamingProvidersProps) {
             )}
 
             <span>{provider.provider_name}</span>
-          </div>
+          </a>
         ))}
       </div>
     </div>

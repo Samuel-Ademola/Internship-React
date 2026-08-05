@@ -13,6 +13,7 @@ import type { StreamingProvider } from "../types/streaming";
 interface WatchProviderResponse {
   results?: {
     [country: string]: {
+      link?: string;
       flatrate?: StreamingProvider[];
       rent?: StreamingProvider[];
       buy?: StreamingProvider[];
@@ -23,7 +24,7 @@ interface WatchProviderResponse {
 export async function getStreamingProviders(
   tmdbMovieId: number,
   country = "NG"
-): Promise<StreamingProvider[]> {
+): Promise<StreamingAvailability> {
   const response = await fetch(
     `${TMDB_BASE_URL}/movie/${tmdbMovieId}/watch/providers?api_key=${tmdbApiKey}&watch_region=${country}`
   );
@@ -35,13 +36,49 @@ export async function getStreamingProviders(
   const data: WatchProviderResponse = await response.json();
   console.log("TMDb provider response:", data);
 
-  const providers =
-    data.results?.[country]?.flatrate ??
-    data.results?.[country]?.rent ??
-    data.results?.[country]?.buy ??
-    [];
+  const countryData = data.results?.[country];
 
-  return providers;
+return {
+  providers:
+    countryData?.flatrate ??
+    countryData?.rent ??
+    countryData?.buy ??
+    [],
+  link: countryData?.link,
+};
+}
+
+export interface StreamingAvailability {
+  providers: StreamingProvider[];
+  link?: string;
+}
+
+export async function getStreamingProvidersWithFallback(
+  tmdbMovieId: number
+): Promise<StreamingAvailability> {
+
+  const regions = [
+    "NG",
+    "US",
+    "GB",
+    "CA",
+  ];
+
+  for (const region of regions) {
+  const result = await getStreamingProviders(
+    tmdbMovieId,
+    region
+  );
+
+  if (result.providers.length > 0) {
+    return result;
+  }
+}
+
+return {
+  providers: [],
+  link: undefined,
+};
 }
 
 export async function findTMDbMovieId(
