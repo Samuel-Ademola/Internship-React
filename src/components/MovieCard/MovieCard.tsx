@@ -1,4 +1,4 @@
-import type { Movie } from '../../services/omdbMovieService';
+import type { Movie } from '../../services/tmdbMovieService';
 import type { StreamingProvider } from '../../types/streaming';
 import StreamingProviders from '../StreamingProviders/StreamingProviders';
 
@@ -14,7 +14,7 @@ function MovieCard({
   providers = [],
 }: MovieCardProps) {
   const handleWatchNow = () => {
-    const query = encodeURIComponent(`${movie.Title} watch online`);
+    const query = encodeURIComponent(`${movie.title} watch online`);
 
     window.open(
       `https://www.google.com/search?q=${query}`,
@@ -24,22 +24,22 @@ function MovieCard({
 
   return (
     <li className="movie-card">
-      {movie.Poster && movie.Poster !== "N/A" ? (
-        <img
-          className="movie-card__poster"
-          src={movie.Poster}
-          alt={movie.Title}
-        />
-      ) : null}
+      {movie.poster_path && (
+<img
+ className="movie-card__poster"
+ src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+ alt={movie.title}
+/>
+)}
 
       <div className="movie-card__content">
         <div>
           <h3 className="movie-card__title">
-            {movie.Title}
-          </h3>
+            {movie.title}
+            </h3>
 
           <p className="movie-card__meta">
-            {movie.Year} · {movie.Type}
+            {movie.release_date?.split("-")[0]}
           </p>
         </div>
 

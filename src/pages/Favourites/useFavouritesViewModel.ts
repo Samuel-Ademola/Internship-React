@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import type { Movie } from '../../services/omdbMovieService';
+import type { Movie } from '../../services/tmdbMovieService';
 import { createFavouritesModel, deleteFavourite, loadFavourites } from './FavouritesModel';
 import { useAuth } from '../../context/AuthContext';
 
@@ -43,7 +43,7 @@ export const useFavouritesViewModel = () => {
 
       try {
         await deleteFavourite(user.uid, imdbID);
-        setFavourites((current) => current.filter((movie) => movie.imdbID !== imdbID));
+        setFavourites((current) => current.filter((movie) => String(movie.id) !== imdbID));
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to remove favourite.');
       } finally {

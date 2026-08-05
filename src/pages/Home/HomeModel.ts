@@ -24,11 +24,17 @@ export async function getMovies(query: string): Promise<Movie[]> {
 export async function initialMovies(): Promise<Movie[]> {
   const movies = await getPopularMovies();
 
-  if (movies.length === 0) {
-    throw new Error('Unable to load movies.');
+  const filteredMovies = movies.filter(
+    (movie) =>
+      movie.poster_path &&
+      movie.release_date
+  );
+
+  if (filteredMovies.length === 0) {
+    throw new Error("Unable to load movies.");
   }
 
-  return movies.slice(0, TARGET_MOVIE_COUNT);
+  return filteredMovies.slice(0, TARGET_MOVIE_COUNT);
 }
 
 export type { HomeModel };

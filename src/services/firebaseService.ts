@@ -10,7 +10,7 @@ import {
   type DocumentData,
   type CollectionReference,
 } from 'firebase/firestore';
-import type { Movie } from './omdbMovieService';
+import type { Movie } from './tmdbMovieService';
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -36,7 +36,7 @@ export const db = getFirestore(app);
 const formatMovie = (data: DocumentData): Movie => {
   const movie = data as Movie;
 
-  if (!movie?.imdbID || !movie?.Title || !movie?.Year || !movie?.Type || !movie?.Poster) {
+  if (!movie?.id || !movie?.title) {
     throw new Error('Invalid favourite movie data received from Firebase.');
   }
 
@@ -58,7 +58,7 @@ export async function addFavourite(userId: string, movie: Movie): Promise<void> 
 
   try {
     const favouritesCollection = getFavouritesCollection(userId);
-    const favouriteDoc = doc(favouritesCollection, movie.imdbID);
+    const favouriteDoc = doc(favouritesCollection, String(movie.id));
     await setDoc(favouriteDoc, movie);
   } catch (error) {
     throw new Error(
@@ -69,18 +69,18 @@ export async function addFavourite(userId: string, movie: Movie): Promise<void> 
   }
 }
 
-export async function removeFavourite(userId: string, imdbID: string): Promise<void> {
+export async function removeFavourite(userId: string, movieId: string): Promise<void> {
   if (!userId || !userId.trim()) {
     throw new Error('Missing userId for removing favourite movie.');
   }
 
-  if (!imdbID) {
-    throw new Error('Missing imdbID for favourite removal.');
+  if (!movieId) {
+    throw new Error('Missing movieId for favourite removal.');
   }
 
   try {
     const favouritesCollection = getFavouritesCollection(userId);
-    const favouriteDoc = doc(favouritesCollection, imdbID);
+    const favouriteDoc = doc(favouritesCollection, movieId);
     await deleteDoc(favouriteDoc);
   } catch (error) {
     throw new Error(

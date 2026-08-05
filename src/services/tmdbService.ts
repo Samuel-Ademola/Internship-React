@@ -44,6 +44,31 @@ export async function getStreamingProviders(
   return providers;
 }
 
+export async function getStreamingProvidersWithFallback(
+  tmdbMovieId: number
+): Promise<StreamingProvider[]> {
+
+  const regions = [
+    "NG",
+    "US",
+    "GB",
+    "CA",
+  ];
+
+  for (const region of regions) {
+    const providers = await getStreamingProviders(
+      tmdbMovieId,
+      region
+    );
+
+    if (providers.length > 0) {
+      return providers;
+    }
+  }
+
+  return [];
+}
+
 export async function findTMDbMovieId(
   imdbId: string
 ): Promise<number | null> {

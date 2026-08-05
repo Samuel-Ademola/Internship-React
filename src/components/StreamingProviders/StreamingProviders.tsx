@@ -8,7 +8,7 @@ function StreamingProviders({ providers }: StreamingProvidersProps) {
   if (!providers.length) {
     return (
       <p className="streaming-providers__empty">
-        No streaming providers available.
+        Streaming availability not found
       </p>
     );
   }
