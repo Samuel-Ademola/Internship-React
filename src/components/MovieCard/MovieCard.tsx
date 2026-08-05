@@ -6,26 +6,18 @@ interface MovieCardProps {
   movie: Movie;
   onFavouriteClick?: () => void;
   providers?: StreamingProvider[];
+  watchLink?: string;
 }
 
 function MovieCard({
   movie,
   onFavouriteClick,
   providers = [],
+  watchLink,
 }: MovieCardProps) {
   const handleWatchNow = () => {
-  if (providers.length > 0) {
-    const provider = providers[0];
-
-    const providerSearch = encodeURIComponent(
-      `${provider.provider_name} ${movie.title}`
-    );
-
-    window.open(
-      `https://www.google.com/search?q=${providerSearch}`,
-      "_blank"
-    );
-
+  if (watchLink) {
+    window.open(watchLink, "_blank");
     return;
   }
 
@@ -68,13 +60,16 @@ function MovieCard({
             type="button"
             onClick={handleWatchNow}
           >
-            ▶ Watch Now
+            📺 Where to Watch
           </button>
 
         </div>
       </div>
 
-      <StreamingProviders providers={providers} />
+      <StreamingProviders
+  providers={providers}
+  watchLink={watchLink}
+/>
 
     </li>
   );

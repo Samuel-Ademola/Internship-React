@@ -4,16 +4,17 @@ import { useAuth } from '../../context/AuthContext';
 import { createHomeModel, getMovies, initialMovies, type HomeModel } from './HomeModel';
 import { saveFavourite as saveFavouriteMovie } from '../Favourites/FavouritesModel';
 import type { Movie } from '../../services/tmdbMovieService';
-import { getStreamingProvidersWithFallback } from '../../services/tmdbService';
-import type { StreamingProvider } from '../../types/streaming';
+import { getStreamingProvidersWithFallback, type StreamingAvailability, } from "../../services/tmdbService";
 
 export const useHomeViewModel = () => {
   const [model] = useState<HomeModel>(() => createHomeModel());
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState<Movie[]>([]);
   const [streamingProviders, setStreamingProviders] = useState<
-  Record<string, StreamingProvider[]>
+  Record<string, StreamingAvailability>
 >({});
+const [loadedProviderMovies, setLoadedProviderMovies] =
+  useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasLoadedInitialMovies, setHasLoadedInitialMovies] = useState(false);
@@ -87,12 +88,13 @@ export const useHomeViewModel = () => {
   console.log("Loading providers for:", movie.title);
 
   try {
-    const providers = await getStreamingProvidersWithFallback(movie.id);
+    const availability =
+  await getStreamingProvidersWithFallback(movie.id);
 
-    setStreamingProviders((previous) => ({
-      ...previous,
-      [String(movie.id)]: providers,
-    }));
+setStreamingProviders((previous) => ({
+  ...previous,
+  [String(movie.id)]: availability,
+}));
 
   } catch (err) {
     console.error(
@@ -108,11 +110,19 @@ export const useHomeViewModel = () => {
   }
 
   movies.forEach((movie) => {
-    if (!streamingProviders[String(movie.id)]) {
+    if (!loadedProviderMovies.has(movie.id)) {
+      setLoadedProviderMovies((previous) => {
+        const updated = new Set(previous);
+        updated.add(movie.id);
+        return updated;
+      });
+
       void loadStreamingProviders(movie);
     }
   });
-}, [movies, streamingProviders, loadStreamingProviders]);
+}, [movies, loadedProviderMovies, loadStreamingProviders]);
+
+
 
   return {
     model,

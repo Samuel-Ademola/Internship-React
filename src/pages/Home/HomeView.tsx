@@ -1,13 +1,13 @@
 import MovieCard from '../../components/MovieCard/MovieCard';
 import type { Movie } from '../../services/tmdbMovieService';
-import type { StreamingProvider } from '../../types/streaming';
+import type { StreamingAvailability } from "../../services/tmdbService";
 
 interface HomeViewProps {
   movies: Movie[];
   loading: boolean;
-  error: string | null;
+  error: string |null;
   onFavouriteClick: (movie: Movie) => void;
-  streamingProviders: Record<string, StreamingProvider[]>;
+  streamingProviders: Record<string, StreamingAvailability>;
 }
 
 export function HomeView({
@@ -48,11 +48,16 @@ export function HomeView({
       <ul className="movie-grid">
         {movies.map((movie) => (
           <MovieCard
-            key={movie.id}
-            movie={movie}
-            onFavouriteClick={() => onFavouriteClick(movie)}
-            providers={streamingProviders[String(movie.id)] || []}
-          />
+  key={movie.id}
+  movie={movie}
+  onFavouriteClick={() => onFavouriteClick(movie)}
+  providers={
+    streamingProviders[String(movie.id)]?.providers ?? []
+  }
+  watchLink={
+    streamingProviders[String(movie.id)]?.link
+  }
+/>
         ))}
       </ul>
     </section>
