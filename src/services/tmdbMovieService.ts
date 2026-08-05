@@ -16,9 +16,9 @@ export interface Movie {
 }
 
 export async function searchMovies(query: string): Promise<Movie[]> {
-  const response = await fetch(
-    `${TMDB_BASE_URL}/search/movie?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}&language=en-US&include_adult=false`
-  );
+  const url = `${TMDB_BASE_URL}/search/movie?api_key=${tmdbApiKey}&query=${encodeURIComponent(query)}&language=en-US&include_adult=false`;
+
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error("Failed to search movies.");
@@ -30,12 +30,11 @@ export async function searchMovies(query: string): Promise<Movie[]> {
 }
 
 export async function getPopularMovies(): Promise<Movie[]> {
-  const today = new Date();
-  const currentDate = today.toISOString().split("T")[0];
+  const url = `${TMDB_BASE_URL}/movie/popular?api_key=${tmdbApiKey}`;
 
-  const response = await fetch(
-    `${TMDB_BASE_URL}/discover/movie?api_key=${tmdbApiKey}&sort_by=popularity.desc&primary_release_date.lte=${currentDate}&primary_release_date.gte=2024-01-01&vote_count.gte=100&language=en-US`
-  );
+  const response = await fetch(url);
+
+  console.log("TMDB status:", response.status);
 
   if (!response.ok) {
     throw new Error("Failed to fetch popular movies.");
@@ -43,9 +42,5 @@ export async function getPopularMovies(): Promise<Movie[]> {
 
   const data = await response.json();
 
-  return (data.results ?? []).filter(
-    (movie: Movie) =>
-      movie.poster_path &&
-      movie.release_date
-  );
+  return data.results ?? [];
 }
